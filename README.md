@@ -1,6 +1,6 @@
 # Bitty
 
-Bitty is a compact BitTorrent client written for Python 3.5+ that uses
+Bitty is a compact BitTorrent client written for Python 3.7+ that uses
 asyncio for non-blocking peer-to-peer communication.
 
 This project is educational rather than production-ready: it purposely
@@ -11,11 +11,6 @@ asyncio primitives.
 ## Demo
 
 ![Bittorrent Client](Bittorrent%20Client.png)
-
-<video controls width="640">
-  <source src="Demo.mp4" type="video/mp4">
-  Your browser does not support the video tag. Download: [Demo.mp4](Demo.mp4)
-</video>
 
 ## Getting started
 
