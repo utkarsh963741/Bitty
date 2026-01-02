@@ -14,23 +14,23 @@ class PeerStreamIteratorTests(unittest.TestCase):
 class HandshakeTests(unittest.TestCase):
     def test_construction(self):
         handshake = Handshake(
-            info_hash=b"CDP;~y~\xbf1X#'\xa5\xba\xae5\xb1\x1b\xda\x01",
+            info_hash=b"\xd1`\xb8\xd8\xea5\xa5\xb4\xe5(7F\x8f\xc8\xf0=U\xce\xf1\xf7",
             peer_id=b"-qB3200-iTiX3rvfzMpr")
 
         self.assertEqual(
             handshake.encode(),
             b"\x13BitTorrent protocol\x00\x00\x00\x00\x00\x00\x00\x00"
-            b"CDP;~y~\xbf1X#'\xa5\xba\xae5\xb1\x1b\xda\x01"
+            b"\xd1`\xb8\xd8\xea5\xa5\xb4\xe5(7F\x8f\xc8\xf0=U\xce\xf1\xf7"
             b"-qB3200-iTiX3rvfzMpr")
 
     def test_parse(self):
         handshake = Handshake.decode(
             b"\x13BitTorrent protocol\x00\x00\x00\x00\x00\x00\x00\x00"
-            b"CDP;~y~\xbf1X#'\xa5\xba\xae5\xb1\x1b\xda\x01"
+            b"\xd1`\xb8\xd8\xea5\xa5\xb4\xe5(7F\x8f\xc8\xf0=U\xce\xf1\xf7"
             b"-qB3200-iTiX3rvfzMpr")
 
         self.assertEqual(
-            b"CDP;~y~\xbf1X#'\xa5\xba\xae5\xb1\x1b\xda\x01",
+            b"\xd1`\xb8\xd8\xea5\xa5\xb4\xe5(7F\x8f\xc8\xf0=U\xce\xf1\xf7",
             handshake.info_hash)
         self.assertEqual(
             b"-qB3200-iTiX3rvfzMpr",

@@ -1,14 +1,37 @@
+import argparse
+import asyncio
+import signal
+import logging
 
-from bitty.bencoding import Decoder
+from concurrent.futures import CancelledError
+
 from bitty.torrent import Torrent
+from bitty.client import TorrentClient
+
 
 def main():
-    print("Bitty CLI is running")
-    with open('tests/data/ubuntu-16.04-desktop-amd64.iso.torrent', 'rb') as f:
-        meta_info = f.read()
-        torrent = Decoder(meta_info).decode()
-        for key, value in list(torrent.items())[:-1]:
-            print(key, value)
-    
-    file = Torrent('tests/data/ubuntu-16.04-desktop-amd64.iso.torrent')
-    print("Announce URL:", file.announce)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('torrent',
+                        help='the .torrent to download')
+    parser.add_argument('-v', '--verbose', action='store_true',
+                        help='enable verbose output')
+
+    args = parser.parse_args()
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
+
+    loop = asyncio.get_event_loop()
+    client = TorrentClient(Torrent(args.torrent))
+    task = loop.create_task(client.start())
+
+    def signal_handler(*_):
+        logging.info('Exiting, please wait until everything is shutdown...')
+        client.stop()
+        task.cancel()
+
+    signal.signal(signal.SIGINT, signal_handler)
+
+    try:
+        loop.run_until_complete(task)
+    except CancelledError:
+        logging.warning('Event loop was canceled')

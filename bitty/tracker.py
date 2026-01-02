@@ -64,9 +64,26 @@ class TrackerResponse:
         # the peers are encoded in a single string
         peers = self.response[b'peers']
         if type(peers) == list:
-            # TODO Implement support for dictionary peer list
+        
             logging.debug('Dictionary model peers are returned by tracker')
-            raise NotImplementedError()
+            peers_list = []
+            for peer in peers:
+                ip = peer.get(b'ip') if b'ip' in peer else peer.get('ip')
+                port = peer.get(b'port') if b'port' in peer else peer.get('port')
+
+                if isinstance(ip, bytes):
+                    ip = ip.decode('utf-8')
+
+                if isinstance(port, bytes):
+                    try:
+                        port = int(port)
+                    except (ValueError, TypeError):
+                        port = _decode_port(port)
+
+                peers_list.append((ip, int(port)))
+
+            return peers_list
+        
         else:
             logging.debug('Binary model peers are returned by tracker')
 
